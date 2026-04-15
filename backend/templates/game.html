@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Interactive AIML Games</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="/static/script.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: linear-gradient(135deg, #2c2c54, #6a0dad);
+            color: white;
+        }
+
+        /* NAVBAR */
+        nav {
+            background: #111;
+            padding: 15px;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            margin: 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* CONTAINER */
+        .container {
+            width: 80%;
+            margin: auto;
+            text-align: center;
+        }
+
+        /* BIG CARDS */
+        .big-card {
+            background: rgba(255,255,255,0.1);
+            padding: 25px;
+            margin: 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-align: left;
+        }
+
+        .big-card:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.02);
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* MODAL BOX */
+        .modal-content {
+            background: #222;
+            padding: 30px;
+            border-radius: 10px;
+            width: 400px;
+            text-align: center;
+        }
+
+        .close {
+            float: right;
+            cursor: pointer;
+            font-size: 22px;
+        }
+
+        button {
+            margin: 10px;
+            padding: 10px 15px;
+            border: none;
+            background: linear-gradient(to right, #8a2be2, #ff1493);
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+
+</head>
+<body>
+
+<!-- <nav>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="games.html">Games</a>
+    <a href="quiz.html">Quiz</a>
+</nav> -->
+
+
+<div class="container">
+    <h2>🧠 Interactive AIML Learning</h2>
+
+    <!-- CARD 1 -->
+    <div class="big-card" onclick="openModal('decision')">
+        <h3>🌳 Decision Tree Simulator</h3>
+        <p>Learn how AI makes decisions using real-life logic like loan approval.</p>
+    </div>
+
+    <!-- CARD 2 -->
+    <div class="big-card" onclick="openModal('classification')">
+        <h3>📊 Spam Classification Game</h3>
+        <p>Identify spam messages and understand classification models.</p>
+    </div>
+
+    <!-- CARD 3 -->
+    <div class="big-card" onclick="openModal('neural')">
+        <h3>🤖 Neural Network Basics</h3>
+        <p>See how neurons process input and generate output.</p>
+    </div>
+</div>
+
+<!-- MODAL -->
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <div id="modal-body"></div>
+    </div>
+</div>
+
+<script>
+function openModal(type) {
+    const modal = document.getElementById("modal");
+    const body = document.getElementById("modal-body");
+
+    if (type === "decision") {
+        body.innerHTML = `
+            <h2>🌳 Decision Tree</h2>
+            <p>Should we approve the loan?</p>
+            <button onclick="alert('Approved ✅')">High Income</button>
+            <button onclick="alert('Rejected ❌')">Low Income</button>
+        `;
+    }
+
+    if (type === "classification") {
+        body.innerHTML = `
+            <h2>📊 Spam Detection</h2>
+            <p>"You won ₹1,00,000! Click now!"</p>
+            <button onclick="alert('Correct! Spam ✅')">Spam</button>
+            <button onclick="alert('Wrong ❌')">Not Spam</button>
+        `;
+    }
+
+    if (type === "neural") {
+        body.innerHTML = `
+            <h2>🤖 Neural Network</h2>
+            <p>Input: 2 + 3</p>
+            <button onclick="alert('Output: 5 ✅')">Process</button>
+        `;
+    }
+
+    modal.style.display = "flex";
+}
+
+function closeModal() {
+    document.getElementById("modal").style.display = "none";
+}
+</script>
+
+</body>
+</html>

@@ -11,14 +11,22 @@ from model import User
 from database import engine
 from model import Base
 
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+
+# Templates
+templates = Jinja2Templates(directory="templates")
+
+# Static files (CSS, JS)
+
 
 Base.metadata.create_all(bind=engine)
 # -------------------- FASTAPI SETUP --------------------
 app = FastAPI()
-
+app.mount("/static", StaticFiles(directory="static"), name="static")
 # Templates & Static
 templates = Jinja2Templates(directory="templates")
-app.mount("/static", StaticFiles(directory="static"), name="static")
+
 
 # -------------------- DATABASE SETUP --------------------
 DATABASE_URL = "postgresql://admin1:admin123@localhost:5432/aiml_db"
@@ -80,6 +88,10 @@ def register(
     db.close()
 
     return RedirectResponse("/", status_code=303)
+
+
+#-----------------home-----------
+
 # -------------------- LOGIN --------------------
 @app.post("/login")
 def login(
@@ -98,8 +110,11 @@ def login(
 
     db.close()
 
-    return RedirectResponse(url="/dashboard", status_code=303)
-    
+    return RedirectResponse(url="/home", status_code=303)
+#------------------------------------------------------------
+@app.get("/home", response_class=HTMLResponse)
+def home(request: Request):
+    return templates.TemplateResponse("home.html", {"request": request})
 # -------------------- DASHBOARD --------------------
 @app.get("/dashboard", response_class=HTMLResponse)
 def dashboard(request: Request):
@@ -121,6 +136,15 @@ def build(request: Request):
 @app.get("/quiz", response_class=HTMLResponse)
 def quiz(request: Request):
     return templates.TemplateResponse("quiz.html", {"request": request})
+
+@app.get("/playground", response_class=HTMLResponse)
+def playground(request: Request):
+    return templates.TemplateResponse("playground.html", {"request": request})
+
+
+@app.get("/game", response_class=HTMLResponse)
+def game(request: Request):
+    return templates.TemplateResponse("game.html", {"request": request})
 
 
 
