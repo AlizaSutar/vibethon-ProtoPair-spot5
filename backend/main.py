@@ -7,7 +7,12 @@ from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.orm import sessionmaker, declarative_base
 
 from passlib.context import CryptContext
+from model import User 
+from database import engine
+from model import Base
 
+
+Base.metadata.create_all(bind=engine)
 # -------------------- FASTAPI SETUP --------------------
 app = FastAPI()
 
@@ -50,6 +55,9 @@ def home(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 # -------------------- REGISTER --------------------
+from fastapi import Form
+from fastapi.responses import RedirectResponse
+
 @app.post("/register")
 def register(
     fullname: str = Form(...),
@@ -57,48 +65,41 @@ def register(
     password: str = Form(...),
     confirm_password: str = Form(...)
 ):
-    if password != confirm_password:
-        return {"error": "Passwords do not match"}
+    print("🔥 REGISTER API HIT")   # 👈 ADD THIS
 
     db = SessionLocal()
 
-    # Check if user already exists
-    existing_user = db.query(User).filter(User.email == email).first()
-    if existing_user:
-        db.close()
-        return {"error": "Email already registered"}
-
-    hashed_password = hash_password(password)
-
-    new_user = User(
+    user = User(
         fullname=fullname,
         email=email,
-        password=hashed_password
+        password=password
     )
 
-    db.add(new_user)
+    db.add(user)
     db.commit()
     db.close()
 
     return RedirectResponse("/", status_code=303)
-
 # -------------------- LOGIN --------------------
 @app.post("/login")
 def login(
     email: str = Form(...),
     password: str = Form(...)
 ):
+    print("Login called")  # ✅ DEBUG
+
     db = SessionLocal()
 
     user = db.query(User).filter(User.email == email).first()
 
-    if not user or not verify_password(password, user.password):
+    if not user or user.password != password:
         db.close()
-        return {"error": "Invalid email or password"}
+        return {"error": "Invalid credentials"}
 
     db.close()
-    return RedirectResponse("/dashboard", status_code=303)
 
+    return RedirectResponse(url="/dashboard", status_code=303)
+    
 # -------------------- DASHBOARD --------------------
 @app.get("/dashboard", response_class=HTMLResponse)
 def dashboard(request: Request):
@@ -120,3 +121,17 @@ def build(request: Request):
 @app.get("/quiz", response_class=HTMLResponse)
 def quiz(request: Request):
     return templates.TemplateResponse("quiz.html", {"request": request})
+
+
+
+@app.get("/force")
+def force():
+    db = SessionLocal()
+
+    user = User(fullname="ForceUser", email="force@test.com", password="123")
+
+    db.add(user)
+    db.commit()
+    db.close()
+
+    return {"msg": "inserted"}

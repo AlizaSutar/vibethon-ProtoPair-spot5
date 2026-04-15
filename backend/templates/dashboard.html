@@ -1,32 +1,369 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Dashboard</title>
-  <link rel="stylesheet" href="/static/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AIML Platform – Dashboard</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"/>
+  <style>
+    :root {
+      --bg-deep: #1a0a2e;
+      --bg-card: #1e1535;
+      --bg-leaderboard: #2a1a3e;
+      --bg-top1: #3a2040;
+      --border-card: rgba(255,255,255,0.07);
+      --text-primary: #f0e6ff;
+      --text-muted: #9e8cbf;
+      --accent-pink: #e040fb;
+      --accent-violet: #7c3aed;
+      --accent-cyan: #22d3ee;
+      --accent-orange: #fb923c;
+      --accent-green: #4ade80;
+      --accent-yellow: #facc15;
+      --gradient-btn: linear-gradient(90deg, #7c3aed, #e040fb);
+    }
+    * { box-sizing: border-box; }
+    body { background-color: var(--bg-deep); color: var(--text-primary); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+
+    .navbar { background: #120820 !important; border-bottom: 1px solid rgba(255,255,255,0.06); padding: 0.6rem 1.5rem; }
+    .navbar-brand { font-weight: 800; font-size: 1.15rem; color: var(--accent-violet) !important; display: flex; align-items: center; gap: 0.5rem; }
+    .nav-link { color: var(--text-muted) !important; font-size: 0.9rem; padding: 0.45rem 0.85rem !important; border-radius: 8px; display: flex; align-items: center; gap: 0.35rem; transition: color 0.2s, background 0.2s; }
+    .nav-link:hover { color: var(--text-primary) !important; background: rgba(255,255,255,0.05); }
+    .nav-link.active { background: var(--accent-violet) !important; color: #fff !important; }
+    .btn-logout { background: #dc2626; color: #fff; border: none; border-radius: 8px; font-weight: 600; padding: 0.45rem 1.1rem; font-size: 0.9rem; text-decoration: none; transition: background 0.2s; }
+    .btn-logout:hover { background: #b91c1c; color: #fff; }
+
+    .page-header { text-align: center; padding: 2.5rem 1rem 1.5rem; background: linear-gradient(180deg, #2d0a5e 0%, #1a0a2e 100%); }
+    .page-header h1 {
+      font-size: 2.2rem; font-weight: 800;
+      background: linear-gradient(90deg, var(--accent-violet), var(--accent-pink));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      margin-bottom: 0.4rem;
+    }
+    .page-header p { color: var(--text-muted); font-size: 0.95rem; }
+
+    .content { padding: 2rem 1.5rem; }
+
+    /* STAT CARDS */
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 14px;
+      padding: 1.4rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .stat-info { }
+    .stat-label { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.3rem; }
+    .stat-value { font-size: 2rem; font-weight: 900; line-height: 1; }
+    .stat-icon { font-size: 1.8rem; }
+    .val-violet { color: var(--accent-violet); }
+    .val-pink { color: var(--accent-pink); }
+    .val-orange { color: var(--accent-orange); }
+    .val-cyan { color: var(--accent-cyan); }
+    .val-green { color: var(--accent-green); }
+
+    /* PROGRESS SECTION */
+    .section-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 14px;
+      padding: 1.6rem;
+    }
+    .section-card h5 { font-weight: 800; font-size: 1rem; margin-bottom: 1.2rem; }
+    .progress-row { margin-bottom: 1rem; }
+    .progress-row-label { display: flex; justify-content: space-between; font-size: 0.87rem; color: var(--text-muted); margin-bottom: 0.4rem; }
+    .progress-row-label .pct { color: var(--accent-green); font-weight: 700; }
+    .progress { background: rgba(255,255,255,0.07); height: 8px; border-radius: 10px; }
+    .progress-bar { border-radius: 10px; }
+    .bar-green { background: linear-gradient(90deg, #4ade80, #22d3ee); }
+    .bar-violet { background: var(--gradient-btn); }
+    .bar-orange { background: linear-gradient(90deg, #fb923c, #e040fb); }
+
+    /* SPAM BOX */
+    .spam-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 14px;
+      padding: 1.6rem;
+    }
+    .spam-card h5 { font-weight: 800; font-size: 1rem; margin-bottom: 0.3rem; }
+    .spam-card p { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem; }
+    .spam-input-row { display: flex; gap: 0.6rem; margin-bottom: 0.8rem; flex-wrap: wrap; }
+    .spam-textarea {
+      background: #2a1f45; border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px; color: var(--text-primary); padding: 0.7rem 1rem;
+      font-size: 0.88rem; width: 100%; resize: vertical; min-height: 80px; outline: none;
+      transition: border-color 0.2s;
+    }
+    .spam-textarea:focus { border-color: var(--accent-violet); }
+    .btn-analyze {
+      background: var(--gradient-btn); border: none; border-radius: 8px;
+      color: #fff; font-weight: 700; padding: 0.6rem 1.3rem; font-size: 0.88rem;
+      cursor: pointer; transition: opacity 0.2s;
+    }
+    .btn-analyze:hover { opacity: 0.88; }
+    .spam-result { font-size: 0.9rem; margin-top: 0.5rem; padding: 0.6rem 1rem; border-radius: 8px; display: none; }
+    .spam-result.spam { background: rgba(248,113,113,0.1); color: #f87171; border: 1px solid rgba(248,113,113,0.2); }
+    .spam-result.ham { background: rgba(74,222,128,0.1); color: #4ade80; border: 1px solid rgba(74,222,128,0.2); }
+
+    /* LEADERBOARD */
+    .leaderboard-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 14px;
+      padding: 1.6rem;
+    }
+    .leaderboard-card h5 { font-weight: 800; font-size: 1rem; margin-bottom: 1.2rem; display: flex; align-items: center; gap: 0.5rem; }
+    .lb-row {
+      display: flex;
+      align-items: center;
+      background: var(--bg-leaderboard);
+      border-radius: 10px;
+      padding: 0.9rem 1rem;
+      margin-bottom: 0.6rem;
+      transition: background 0.2s;
+    }
+    .lb-row:hover { background: rgba(124,58,237,0.1); }
+    .lb-row.top1 { background: var(--bg-top1); border: 1px solid rgba(250,204,21,0.2); }
+    .lb-row.top2 { background: var(--bg-leaderboard); border: 1px solid rgba(156,163,175,0.15); }
+    .lb-row.top3 { background: var(--bg-leaderboard); border: 1px solid rgba(180,120,60,0.15); }
+    .lb-rank { font-size: 1.2rem; min-width: 32px; }
+    .lb-avatar { font-size: 1.3rem; margin: 0 0.7rem; }
+    .lb-info { flex: 1; }
+    .lb-name { font-weight: 700; font-size: 0.95rem; }
+    .lb-badge { color: var(--text-muted); font-size: 0.8rem; }
+    .lb-points { text-align: right; }
+    .lb-pts-num { font-size: 1.3rem; font-weight: 900; color: var(--accent-pink); }
+    .lb-pts-label { font-size: 0.75rem; color: var(--text-muted); }
+
+    .you-row { background: rgba(124,58,237,0.15) !important; border: 1px solid rgba(124,58,237,0.3) !important; }
+    .you-tag { background: var(--accent-violet); color: #fff; font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 6px; margin-left: 0.5rem; }
+  </style>
 </head>
 <body>
 
-<h1>Welcome to AIML Arena 🚀</h1>
+  <nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="home.html">🤖 AIML Platform</a>
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+        <span style="color:#9e8cbf;font-size:1.4rem;">☰</span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav mx-auto gap-1">
+          <li class="nav-item"><a class="nav-link" href="home.html">🏠 Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="learn.html">📚 Learn</a></li>
+          <li class="nav-item"><a class="nav-link" href="playground.html">🔬 Playground</a></li>
+          <li class="nav-item"><a class="nav-link" href="games.html">🎮 Games</a></li>
+          <li class="nav-item"><a class="nav-link" href="quiz.html">❓ Quiz</a></li>
+          <li class="nav-item"><a class="nav-link active" href="dashboard.html">📊 Dashboard</a></li>
+        </ul>
+        <a href="login.html" class="btn-logout">Logout</a>
+      </div>
+    </div>
+  </nav>
 
-<div class="cards">
+  <div class="page-header">
+    <h1>▪ Your Dashboard</h1>
+    <p>Track your progress and achievements</p>
+  </div>
 
-  <a href="/learn">
-    <div class="card">📚 Learn AI</div>
-  </a>
+  <div class="content">
 
-  <a href="/game">
-    <div class="card">🎮 Play Game</div>
-  </a>
+    <!-- STAT CARDS -->
+    <div class="row g-3 mb-3">
+      <div class="col-6 col-lg-4">
+        <div class="stat-card">
+          <div class="stat-info">
+            <div class="stat-label">Courses Completed</div>
+            <div class="stat-value val-violet">8</div>
+          </div>
+          <div class="stat-icon">📚</div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-4">
+        <div class="stat-card">
+          <div class="stat-info">
+            <div class="stat-label">Total Points</div>
+            <div class="stat-value val-pink">650</div>
+          </div>
+          <div class="stat-icon">⭐</div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-4">
+        <div class="stat-card">
+          <div class="stat-info">
+            <div class="stat-label">Current Streak</div>
+            <div class="stat-value val-orange">12 days</div>
+          </div>
+          <div class="stat-icon">🔥</div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-4">
+        <div class="stat-card">
+          <div class="stat-info">
+            <div class="stat-label">Quizzes Attempted</div>
+            <div class="stat-value val-cyan">15</div>
+          </div>
+          <div class="stat-icon">❓</div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-4">
+        <div class="stat-card">
+          <div class="stat-info">
+            <div class="stat-label">Average Score</div>
+            <div class="stat-value val-green">78%</div>
+          </div>
+          <div class="stat-icon">📝</div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-4">
+        <div class="stat-card">
+          <div class="stat-info">
+            <div class="stat-label">Global Rank</div>
+            <div class="stat-value val-violet">#12</div>
+          </div>
+          <div class="stat-icon">🏆</div>
+        </div>
+      </div>
+    </div>
 
-  <a href="/build">
-    <div class="card">🧪 Build Model</div>
-  </a>
+    <!-- PROGRESS + SPAM -->
+    <div class="row g-3 mb-3">
+      <div class="col-12 col-lg-6">
+        <div class="section-card">
+          <h5>Learning Progress</h5>
+          <div class="progress-row">
+            <div class="progress-row-label"><span>Beginner Level</span><span class="pct">100%</span></div>
+            <div class="progress"><div class="progress-bar bar-green" style="width:100%"></div></div>
+          </div>
+          <div class="progress-row">
+            <div class="progress-row-label"><span>Intermediate Level</span><span class="pct" style="color:var(--accent-violet)">45%</span></div>
+            <div class="progress"><div class="progress-bar bar-violet" style="width:45%"></div></div>
+          </div>
+          <div class="progress-row">
+            <div class="progress-row-label"><span>Advanced Level</span><span class="pct" style="color:var(--accent-orange)">10%</span></div>
+            <div class="progress"><div class="progress-bar bar-orange" style="width:10%"></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-lg-6">
+        <div class="spam-card">
+          <h5>🧠 Spam Detection AI</h5>
+          <p>Test our ML spam detection model</p>
+          <textarea class="spam-textarea" id="spamText" placeholder="Enter a message to check if it's spam..."></textarea>
+          <div class="spam-input-row">
+            <button class="btn-analyze" onclick="analyzeSpam()">🔍 Analyze</button>
+          </div>
+          <div class="spam-result" id="spamResult"></div>
+        </div>
+      </div>
+    </div>
 
-  <a href="/quiz">
-    <div class="card">📝 Take Quiz</div>
-  </a>
+    <!-- LEADERBOARD -->
+    <div class="leaderboard-card">
+      <h5>🏆 Global Leaderboard</h5>
 
-</div>
+      <div class="lb-row top1">
+        <div class="lb-rank">🥇</div>
+        <div class="lb-avatar">🧑‍💻</div>
+        <div class="lb-info">
+          <div class="lb-name">Alex Chen</div>
+          <div class="lb-badge">Rank #1 Master</div>
+        </div>
+        <div class="lb-points">
+          <div class="lb-pts-num">985</div>
+          <div class="lb-pts-label">points</div>
+        </div>
+      </div>
 
+      <div class="lb-row top2">
+        <div class="lb-rank">🥈</div>
+        <div class="lb-avatar">👩‍💻</div>
+        <div class="lb-info">
+          <div class="lb-name">Sarah Johnson</div>
+          <div class="lb-badge">Top Performer</div>
+        </div>
+        <div class="lb-points">
+          <div class="lb-pts-num">945</div>
+          <div class="lb-pts-label">points</div>
+        </div>
+      </div>
+
+      <div class="lb-row top3">
+        <div class="lb-rank">🥉</div>
+        <div class="lb-avatar">🧑‍🎓</div>
+        <div class="lb-info">
+          <div class="lb-name">Mike Wilson</div>
+          <div class="lb-badge">Top Performer</div>
+        </div>
+        <div class="lb-points">
+          <div class="lb-pts-num">910</div>
+          <div class="lb-pts-label">points</div>
+        </div>
+      </div>
+
+      <div class="lb-row">
+        <div class="lb-rank" style="color:var(--text-muted);font-size:1rem;font-weight:700;">4</div>
+        <div class="lb-avatar">👩‍🎓</div>
+        <div class="lb-info">
+          <div class="lb-name">Emma Davis</div>
+          <div class="lb-badge">Active Learner</div>
+        </div>
+        <div class="lb-points">
+          <div class="lb-pts-num">875</div>
+          <div class="lb-pts-label">points</div>
+        </div>
+      </div>
+
+      <div class="lb-row">
+        <div class="lb-rank" style="color:var(--text-muted);font-size:1rem;font-weight:700;">5</div>
+        <div class="lb-avatar">🧑</div>
+        <div class="lb-info">
+          <div class="lb-name">John Smith</div>
+          <div class="lb-badge">Active Learner</div>
+        </div>
+        <div class="lb-points">
+          <div class="lb-pts-num">820</div>
+          <div class="lb-pts-label">points</div>
+        </div>
+      </div>
+
+      <div class="lb-row you-row">
+        <div class="lb-rank" style="color:var(--accent-violet);font-size:1rem;font-weight:700;">12</div>
+        <div class="lb-avatar">🤖</div>
+        <div class="lb-info">
+          <div class="lb-name">tejaskoli <span class="you-tag">YOU</span></div>
+          <div class="lb-badge">Rising Star</div>
+        </div>
+        <div class="lb-points">
+          <div class="lb-pts-num">650</div>
+          <div class="lb-pts-label">points</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function analyzeSpam() {
+      const text = document.getElementById('spamText').value.trim();
+      const result = document.getElementById('spamResult');
+      if (!text) { result.style.display = 'block'; result.className = 'spam-result spam'; result.textContent = '⚠️ Please enter a message to analyze.'; return; }
+      const spamWords = ['win', 'free', 'prize', 'click', 'offer', 'urgent', 'congratulations', 'claim', 'money', 'cash'];
+      const lower = text.toLowerCase();
+      const isSpam = spamWords.some(w => lower.includes(w)) || text.length < 10;
+      result.style.display = 'block';
+      if (isSpam) {
+        result.className = 'spam-result spam';
+        result.textContent = '🚨 SPAM DETECTED — This message appears to be spam (confidence: 92%)';
+      } else {
+        result.className = 'spam-result ham';
+        result.textContent = '✅ NOT SPAM — This message appears to be legitimate (confidence: 87%)';
+      }
+    }
+  </script>
 </body>
 </html>

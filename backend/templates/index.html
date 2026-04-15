@@ -1,16 +1,201 @@
-<link rel="stylesheet" href="/static/style.css">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AIML Platform</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<form action="/login" method="post">
-  <input type="email" name="email" placeholder="Email" required>
-  <input type="password" name="password" placeholder="Password" required>
-  <button type="submit">Login</button>
+  <!-- ✅ Bootstrap CDN (no download needed) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      height: 100vh;
+      background: linear-gradient(135deg, #1e1b4b, #6b21a8, #1e1b4b);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card-custom {
+      background: rgba(30, 41, 59, 0.9);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      padding: 30px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    }
+
+    .title {
+      background: linear-gradient(to right, #c084fc, #ec4899);
+      -webkit-background-clip: text;
+      color: transparent;
+      font-weight: bold;
+    }
+
+    .form-control {
+      background-color: #334155;
+      border: 1px solid #475569;
+      color: white;
+    }
+
+    .form-control::placeholder {
+      color: #94a3b8;
+    }
+
+    .form-control:focus {
+      border-color: #a855f7;
+      box-shadow: none;
+      background-color: #334155;
+      color: white;
+    }
+
+    .btn-custom {
+      background: linear-gradient(to right, #7e22ce, #ec4899);
+      border: none;
+      font-weight: bold;
+      color: white;
+    }
+
+    .btn-custom:hover {
+      background: linear-gradient(to right, #6b21a8, #db2777);
+    }
+
+    .link {
+      color: #c084fc;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .link:hover {
+      color: #a855f7;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card-custom text-white">
+
+    <!-- Header -->
+    <div class="text-center mb-4">
+      <div style="font-size:40px;">🤖</div>
+      <h2 class="title">AIML Platform</h2>
+      <p class="text-secondary">Master AI and Machine Learning</p>
+    </div>
+
+    <!-- Form -->
+    <form id="form" action="/login" method="post">
+
+  <!-- Name -->
+  <div class="mb-3 hidden" id="nameField">
+    <label class="form-label">Full Name</label>
+    <input type="text" name="fullname" id="name" class="form-control" placeholder="John Doe">
+    <small class="text-danger" id="nameError"></small>
+  </div>
+
+  <!-- Email -->
+  <div class="mb-3">
+    <label class="form-label">Email</label>
+    <input type="email" name="email" id="email" class="form-control" placeholder="you@example.com" required>
+    <small class="text-danger" id="emailError"></small>
+  </div>
+
+  <!-- Password -->
+  <div class="mb-3">
+    <label class="form-label">Password</label>
+    <input type="password" name="password" id="password" class="form-control" placeholder="••••••" required>
+    <small class="text-danger" id="passwordError"></small>
+  </div>
+
+  <!-- Confirm Password -->
+  <div class="mb-3 hidden" id="confirmField">
+    <label class="form-label">Confirm Password</label>
+    <input type="password" name="confirm_password" id="confirmPassword" class="form-control" placeholder="••••••">
+    <small class="text-danger" id="confirmError"></small>
+  </div>
+
+  <!-- Button -->
+  <button type="submit" class="btn btn-custom w-100 mt-3" id="submitBtn">
+    Login
+  </button>
 </form>
 
-<form action="/register" method="post">
-  <input type="text" name="fullname" placeholder="Full Name" required>
-  <input type="email" name="email" placeholder="Email" required>
-  <input type="password" name="password" placeholder="Password" required>
-  <input type="password" name="confirm_password" placeholder="Confirm Password" required>
-  <button type="submit">Register</button>
-</form>
+    <!-- Toggle -->
+    <div class="text-center mt-4">
+      <span id="toggleText" class="text-secondary">Don't have an account?</span>
+      <span class="link" onclick="toggle()">Register</span>
+    </div>
 
+  </div>
+
+  <!-- Bootstrap JS (optional) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- JS Logic -->
+  <script>
+  let isLogin = true;
+
+  function toggle() {
+    isLogin = !isLogin;
+
+    document.getElementById("nameField").classList.toggle("hidden");
+    document.getElementById("confirmField").classList.toggle("hidden");
+
+    document.getElementById("submitBtn").innerText = isLogin ? "Login" : "Register";
+    document.getElementById("toggleText").innerText =
+      isLogin ? "Don't have an account?" : "Already have an account?";
+
+    // ✅ IMPORTANT: change backend route
+    document.getElementById("form").action = isLogin ? "/login" : "/register";
+  }
+
+  // ✅ KEEP validation but DO NOT block submit
+  document.getElementById("form").addEventListener("submit", function(e) {
+
+    let email = document.getElementById("email").value;
+    let password = document.getElementById("password").value;
+    let name = document.getElementById("name").value;
+    let confirm = document.getElementById("confirmPassword").value;
+
+    document.querySelectorAll("small").forEach(e => e.innerText = "");
+
+    let valid = true;
+
+    if (!email || !email.includes("@")) {
+      document.getElementById("emailError").innerText = "Invalid email";
+      valid = false;
+    }
+
+    if (!password || password.length < 6) {
+      document.getElementById("passwordError").innerText = "Min 6 characters";
+      valid = false;
+    }
+
+    if (!isLogin) {
+      if (!name) {
+        document.getElementById("nameError").innerText = "Name required";
+        valid = false;
+      }
+      if (password !== confirm) {
+        document.getElementById("confirmError").innerText = "Passwords do not match";
+        valid = false;
+      }
+    }
+
+    // ❗ ONLY prevent if invalid
+    if (!valid) {
+      e.preventDefault();
+    }
+  });
+</script>
+
+</body>
+</html>
+```
