@@ -80,30 +80,63 @@
       cursor: pointer; transition: opacity 0.2s;
     }
     .btn-course:hover { opacity: 0.85; }
+    h1, h2, h3, h4, h5, h6 {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  background: none !important;
+}
   </style>
 </head>
 <body>
 
-  <nav class="navbar navbar-expand-lg">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="home.html">🤖 AIML Platform</a>
-      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
-        <span style="color:#9e8cbf;font-size:1.4rem;">☰</span>
-      </button>
-      <div class="collapse navbar-collapse" id="navMenu">
-          <ul class="navbar-nav mx-auto gap-1">
-            <li onclick="go('/home')">🏠 Home</li>
-            <li onclick="go('/learn')">📚 Learn</li>
-            <li onclick="go('/playground')">🎮 Playground</li>
-            <li onclick="go('/game')">🕹️ Games</li>
-            <li onclick="go('/quiz')">❓ Quiz</li>
-            <li onclick="go('/dashboard')">📊 Dashboard</li>
-        </ul>
-        <a href="login.html" class="btn-logout">Logout</a>
-      </div>
-    </div>
-  </nav>
+ <nav class="navbar navbar-expand-lg">
+  <div class="container-fluid">
 
+    <!-- Logo -->
+    <a class="navbar-brand" href="/home">🤖 AIML Platform</a>
+
+    <!-- Mobile toggle -->
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span style="color:#9e8cbf;font-size:1.4rem;">☰</span>
+    </button>
+
+    <!-- Navbar Links -->
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav mx-auto gap-2">
+
+        <li class="nav-item">
+          <a class="nav-link" href="/home">🏠 Home</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="/learn">📚 Learn</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="/playground">🔬 Playground</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="/game">🎮 Games</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="/quiz">❓ Quiz</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link active" href="/dashboard">📊 Dashboard</a>
+        </li>
+
+      </ul>
+
+      <!-- Logout Button -->
+      
+    </div>
+
+  </div>
+  <button onclick="logout()" class="btn-logout">Logout</button>
+</nav>
   <div class="page-header">
     <h1>📚 Structured Learning</h1>
     <p>Learn AI/ML from Beginner to Advanced level with hands-on lessons.</p>

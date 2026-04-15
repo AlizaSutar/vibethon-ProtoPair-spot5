@@ -163,30 +163,43 @@
       display: inline-block;
     }
     .btn-games:hover { background: rgba(124,58,237,0.15); transform: translateY(-1px); color: #fff; }
-  </style>
+ h1, h2, h3, h4, h5, h6 {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  background: none !important;
+}
+ </style>
 </head>
 <body>
 
-  <!-- NAVBAR -->
-  <nav class="navbar navbar-expand-lg">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="home.html">🤖 AIML Platform</a>
-      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
-        <span style="color:#9e8cbf; font-size:1.4rem;">☰</span>
-      </button>
-      <div class="collapse navbar-collapse" id="navMenu">
-        <ul class="navbar-nav mx-auto gap-1">
-          <li onclick="go('/home')">🏠 Home</li>
-          <li onclick="go('/learn')">📚 Learn</li>
-          <li onclick="go('/playground')">🎮 Playground</li>
-          <li onclick="go('/game')">🕹️ Games</li>
-          <li onclick="go('/quiz')">❓ Quiz</li>
-          <li onclick="go('/dashboard')">📊 Dashboard</li>
-        </ul>
-        <a href="login.html" class="btn-logout">Logout</a>
-      </div>
+  <!-- ✅ NAVBAR FIXED -->
+<nav class="navbar navbar-expand-lg bg-dark">
+  <div class="container-fluid">
+
+    <a class="navbar-brand text-white" href="/home">🤖 AIML Platform</a>
+
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span style="color:white;font-size:1.4rem;">☰</span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav mx-auto gap-2">
+
+        <li class="nav-item"><a class="nav-link text-white" href="/home">🏠 Home</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="/learn">📚 Learn</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="/playground">🔬 Playground</a></li>
+        <li class="nav-item"><a class="nav-link text-white active" href="/game">🎮 Games</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="/quiz">❓ Quiz</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="/dashboard">📊 Dashboard</a></li>
+
+      </ul>
+
+      <!-- ✅ Logout INSIDE navbar -->
+      <button onclick="logout()" class="btn btn-danger">Logout</button>
     </div>
-  </nav>
+
+  </div>
+</nav>
 
   <!-- HERO -->
   <div class="hero">
